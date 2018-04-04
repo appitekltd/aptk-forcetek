@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+  
+<head>
+  <meta charset="UTF-8">
+  <title>cForce | Web Example</title>
+  <script type="text/javascript" src="../cforce.js"></script>
+  <script type="text/javascript">
+    // create a new instance of Force
+    var Force = new cForce({
+      //callbackUrl: 'PATH_TO_YOUR_APP/success.html' // must be on same domain
+      //consumerKey: 'YOUR_CONNECTED_APP_ID', // your sf connected app id
+      //proxyUrl: 'PATH_TO_YOUR_APP/proxy.php', // proxy for requests
+      callbackUrl: 'https://www.ceternalabs.com/success.html',
+      consumerKey: '3MVG98_Psg5cppyZDgOBkiUwM8ZH8bQ2.n3_6QWahvgZJb.f58PRgLFzsXaMz67EBXvAwIQ9wWnJr.vyjZUr7',
+      proxyUrl: 'https://www.ceternalabs.com/proxy.php'
+    });
+    // call the login popup
+    Force.login(function(client) {
+      // client can be stored and later refreshed with Force.refresh(client)
+      // you can now run the standard Force functions, like .query
+      Force.query('SELECT Name FROM Account LIMIT 10', function(err, result) {
+        if (err) return console.error(err);
+        // do something with the data, i.e. show the records in the page
+        var mount = document.getElementById('accounts');
+        for (var a = 0; a < result.records.length; a++) {
+          mount.innerHTML += '<li>' + result.records[a].Name + '</li>';
+        }
+        // you can now get the current daily REST API limits for this org
+        console.log(Force.usage());
+      })
+    })
+  </script>
+</head>
+
+<body>
+  <!-- mount for the account records -->
+  <ul id="accounts"></ul>
+</body>
+
+</html>

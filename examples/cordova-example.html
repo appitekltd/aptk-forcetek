@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <meta name="viewport" content="initial-scale=1, width=device-width">
+  <title>cForce | Cordova Example</title>
+  <script type="text/javascript" src="cordova.js"></script>
+  <script type="text/javascript" src="js/cforce.js"></script>
+  <script type="text/javascript">
+    // wait for the device to be ready
+    document.addEventListener("deviceready", function() {
+      // create a new instance of Force
+      var Force = new cForce({
+        callbackUrl: 'PATH_TO_YOUR_APP/success.html' // must be on same domain
+        consumerKey: 'YOUR_CONNECTED_APP_ID', // your sf connected app id
+      });
+      // call the login popup
+      Force.login(function(client) {
+        // client can be stored and later refreshed with Force.refresh(client)
+        // you can now run the standard Force functions, like .query
+        Force.query('SELECT Name FROM Account LIMIT 10', function(err, result) {
+          if (err) return console.error(err);
+          // do something with the data, i.e. show the records in the page
+          var mount = document.getElementById('accounts');
+          for (var a = 0; a < result.records.length; a++) {
+            mount.innerHTML += '<li>' + result.records[a].Name + '</li>';
+          }
+          // you can now get the current daily REST API limits for this org
+          console.log(Force.usage());
+        })
+      })
+    });
+  </script>
+</head>
+
+<body>
+  <!-- mount for the account records -->
+  <div id="accounts"></div>
+</body>
+
+</html>
